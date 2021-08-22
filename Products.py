@@ -20,12 +20,12 @@ class Product(ABC):
             self.name = data[0]
             self.price = data[1]
 
-            self.time = datetime.now()
+            self.time = datetime.now().strftime("%H:%M:%S")
 
         else:
             self.name = args[0]
             self.price = args[1]
-            self.time = datetime.strptime(args[2], "%H:%M:%S")
+            self.time = args[2]
             self.link = args[3]
 
 
@@ -45,14 +45,13 @@ class Product(ABC):
         return self.time
 
     def toString(self):
-        s = "Name: " + self.name + " Price: " + str(self.price) + " Lei Time: " + self.time.strftime("%H:%M:%S") + " "
+        s = "Name: " + self.name + " Price: " + str(self.price) + " Lei Time: " + self.time + " " + self.link
         return s
     
 class EmagProduct(Product):
 
     def __init__(self, link):
         super().__init__(link)
-        self.type = "Emag"
     
     def getData(self, link):
         r = requests.get(link)
@@ -70,7 +69,6 @@ class FlancoProduct(Product):
 
     def __init__(self, link):
         super().__init__(link)
-        self.type = "Flanco"
     
     def getData(self, link):
         r = requests.get(link)
@@ -79,7 +77,7 @@ class FlancoProduct(Product):
         soup = BeautifulSoup(content, "html.parser")
 
         name = soup.find("span", {"class" : "base"}).text.strip()
-        price = soup.find("span", {"class" : "price"}).text.replace(',', '.').replace(" lei", "")
+        price = (soup.find("span", {"class" : "special-price"})).find("span", {"class" : "price"}).text.replace('.', "").replace(',', '.').replace(" lei", "")
 
         return (name, float(price))
 
@@ -88,7 +86,6 @@ class CelProduct(Product):
 
     def __init__(self, link):
         super().__init__(link)
-        self.type = "Cel"
     
     def getData(self, link):
         r = requests.get(link)
@@ -104,7 +101,6 @@ class CarrefourProduct(Product):
 
     def __init__(self, link):
         super().__init__(link)
-        self.type = "Carrefour"
     
     def getData(self, link):
         r = requests.get(link)
@@ -112,6 +108,6 @@ class CarrefourProduct(Product):
 
         soup = BeautifulSoup(content, "html.parser")
 
-        name = soup.find("span", {"class" : "base","data-ui-id" : "page-title-wrapper", "itemprop" : "name"}).text.strip()
+        name = soup.find("span", {"class" : "base", "data-ui-id" : "page-title-wrapper", "itemprop" : "name"}).text.strip()
         price = soup.find("span", {"class" : "price"}).text.replace("\xa0Lei", "")
         return(name, float(price))
