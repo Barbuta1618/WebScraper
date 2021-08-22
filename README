@@ -1,0 +1,4 @@
+The program collects the price of a specific product(Samsung 32T4302) from 4 different websites: Emag, Flanco, Cel and Carrefour.
+Then it calculates the minimum and the maximum price providing information about when and where these priceses were reached.
+
+It uses BeautifulSoup for web scraping and a sqlite database.
