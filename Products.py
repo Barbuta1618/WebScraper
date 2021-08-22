@@ -6,16 +6,28 @@ from datetime import datetime
 from abc import ABC, abstractmethod
 class Product(ABC):
 
-    def __init__(self, link):
+    def __init__(self, *args):
 
-        self.link = link
-        data = self.getData(link)
-        self.type = ""
+        # you can create an object by giving a link and collecting data from it
+        # or by giving all the atributes as parameters 
+        if len(args) == 1:
 
-        self.name = data[0]
-        self.price = data[1]
+            link = args[0]
+            self.link = link
+            data = self.getData(link)
+            self.type = ""
 
-        self.time = datetime.now()
+            self.name = data[0]
+            self.price = data[1]
+
+            self.time = datetime.now()
+
+        else:
+            self.name = args[0]
+            self.price = args[1]
+            self.time = datetime.strptime(args[2], "%H:%M:%S")
+            self.link = args[3]
+
 
     def getData(self, link):
         pass
@@ -33,7 +45,7 @@ class Product(ABC):
         return self.time
 
     def toString(self):
-        s = "Name: " + self.name + " Price: " + str(self.price) + " Lei Time: " + self.time.strftime("%H:%M:%S") + " " + self.type
+        s = "Name: " + self.name + " Price: " + str(self.price) + " Lei Time: " + self.time.strftime("%H:%M:%S") + " "
         return s
     
 class EmagProduct(Product):

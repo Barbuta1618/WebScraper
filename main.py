@@ -1,4 +1,9 @@
+from os import system
 import Products
+import DataBase
+import threading
+import time
+import os
 
 with open("links.txt", "r") as input:
     emagLink = input.readline().strip()
@@ -6,12 +11,20 @@ with open("links.txt", "r") as input:
     celLink = input.readline().strip()
     carrefourLink = input.readline().strip()
 
-emagProd = Products.EmagProduct(emagLink)
-flancoProd = Products.FlancoProduct(flancoLink)
-celProd = Products.CelProduct(celLink)
-carrefourProd = Products.CarrefourProduct(carrefourLink)
+db = DataBase.DataBase('products.db')
 
-print(emagProd.toString())
-print(flancoProd.toString())
-print(celProd.toString())
-print(carrefourProd.toString())
+def getData():
+    while True:
+        emagProd = Products.EmagProduct(emagLink)
+        flancoProd = Products.FlancoProduct(flancoLink)
+        celProd = Products.CelProduct(celLink)
+        carrefourProd = Products.CarrefourProduct(carrefourLink)
+
+        db.insertProduct(emagProd)
+        db.insertProduct(flancoProd)
+        db.insertProduct(celProd)
+        db.insertProduct(carrefourProd)
+
+        
+        time.sleep(3600)
+        
