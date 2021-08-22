@@ -1,9 +1,9 @@
 from os import system
 import Products
 import DataBase
-import threading
 import time
 import os
+import json
 
 with open("links.txt", "r") as input:
     emagLink = input.readline().strip()
@@ -25,6 +25,21 @@ def getData():
         db.insertProduct(celProd)
         db.insertProduct(carrefourProd)
 
-        
+        minProd = db.getMinPrice()
+        maxProd = db.getMaxPrice()
+
+        os.system("clear")
+        print("MinPrice: ")
+        print(minProd.toString())
+        print("MaxPrice: ")
+        print(maxProd.toString())
+
+        with open("output.json", "w+") as output:
+            minProdDict = { "MinPriceProd" : minProd.__dict__}
+            maxProdDict = { "MaxPriceProd" : maxProd.__dict__}
+            output.write(json.dumps((minProdDict, maxProdDict)))
+
+
         time.sleep(3600)
         
+getData()
