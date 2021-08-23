@@ -34,10 +34,11 @@ def getData():
         print("MaxPrice: ")
         print(maxProd.toString())
 
-        with open("output.json", "w+") as output:
+        
+        with open("output.json", "w+", encoding = 'utf-8') as output:
             minProdDict = { "MinPriceProd" : minProd.__dict__}
             maxProdDict = { "MaxPriceProd" : maxProd.__dict__}
-            output.write(json.dumps((minProdDict, maxProdDict)))
+            json.dump([minProdDict, maxProdDict], output, ensure_ascii = False, indent = 4)
 
 
         time.sleep(3600)
