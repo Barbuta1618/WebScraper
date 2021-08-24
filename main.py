@@ -13,6 +13,20 @@ with open("links.txt", "r") as input:
 
 db = DataBase.DataBase('products.db')
 
+def toJSON(minProd, maxProd):
+    with open("output.json", "w+", encoding = 'utf-8') as output:
+            out = {
+                "minName" : minProd[0],
+                "minPrice" : minProd[1],
+                "minTime" : minProd[2],
+                "minLink" : minProd[3],
+                "maxName" : maxProd[0],
+                "maxPrice" : maxProd[1],
+                "maxTime" : maxProd[2],
+                "maxLink" : maxProd[3]
+            }
+            json.dump(out, output, ensure_ascii = False, indent = 4)
+
 def getData():
     while True:
         emagProd = Products.EmagProduct(emagLink)
@@ -20,26 +34,22 @@ def getData():
         celProd = Products.CelProduct(celLink)
         carrefourProd = Products.CarrefourProduct(carrefourLink)
 
-        db.insertProduct(emagProd)
-        db.insertProduct(flancoProd)
-        db.insertProduct(celProd)
-        db.insertProduct(carrefourProd)
+        db.insertProduct(emagProd.toTuple())
+        db.insertProduct(flancoProd.toTuple())
+        db.insertProduct(celProd.toTuple())
+        db.insertProduct(carrefourProd.toTuple())
 
         minProd = db.getMinPrice()
         maxProd = db.getMaxPrice()
 
         os.system("clear")
         print("MinPrice: ")
-        print(minProd.toString())
+        print(minProd)
         print("MaxPrice: ")
-        print(maxProd.toString())
+        print(maxProd)
 
-        
-        with open("output.json", "w+", encoding = 'utf-8') as output:
-            minProdDict = { "MinPriceProd" : minProd.__dict__}
-            maxProdDict = { "MaxPriceProd" : maxProd.__dict__}
-            json.dump([minProdDict, maxProdDict], output, ensure_ascii = False, indent = 4)
-
+        toJSON(minProd, maxProd)
+    
 
         time.sleep(3600)
         
