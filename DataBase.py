@@ -1,5 +1,4 @@
 import sqlite3
-import Products
 
 class DataBase():
     def __init__(self, name):
@@ -13,12 +12,12 @@ class DataBase():
     
     def insertProduct(self, product):
 
-        oldPrice = self.getPriceByLink(product.getLink())
+        oldPrice = self.getPriceByLink(product[3])
 
-        if oldPrice != product.getPrice():
+        if oldPrice != product[2]:
 
-            insertCommand = "INSERT INTO products VALUES (NULL, ?, ?, ?, ?)"
-            self.cursor.execute(insertCommand, (product.getName(), product.getPrice(), product.getTime(), product.getLink()))
+            insertCommand = "INSERT INTO products VALUES (NULL, '{}', {}, '{}', '{}')"
+            self.cursor.execute(insertCommand.format(product[0], product[1], product[2], product[3]))
 
             self.connection.commit()
 
@@ -33,18 +32,19 @@ class DataBase():
 
         return price
     
+    # returns a tuple (name, price, time, link)
     def getMinPrice(self):
-        command = " SELECT * FROM products WHERE price = (SELECT min(price) FROM products)"
+        command = " SELECT name, price, time, link FROM products WHERE price = (SELECT min(price) FROM products)"
         self.cursor.execute(command)
         data = self.cursor.fetchall()[-1]
 
-        return Products.Product(data[1], data[2], data[3], data[4])
+        return data
 
     def getMaxPrice(self):
-        command = " SELECT * FROM products WHERE price = (SELECT max(price) FROM products)"
+        command = " SELECT name, price, time, link FROM products WHERE price = (SELECT max(price) FROM products)"
         self.cursor.execute(command)
         data = self.cursor.fetchall()[-1]
 
-        return Products.Product(data[1], data[2], data[3], data[4])
+        return data
 
         
