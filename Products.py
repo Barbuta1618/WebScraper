@@ -12,9 +12,8 @@ class Product(ABC):
         # or by giving all the atributes as parameters 
         if len(args) == 1:
 
-            link = args[0]
-            self.link = link
-            data = self.getData(link)
+            self.link = args[0]
+            data = self.getData(self.link)
             self.type = ""
 
             self.name = data[0]
@@ -47,6 +46,9 @@ class Product(ABC):
     def toString(self):
         s = "Name: " + self.name + " Price: " + str(self.price) + " Lei Time: " + self.time + " " + self.link
         return s
+
+    def toTuple(self):
+        return (self.name, self.price, self.time, self.link)
     
 class EmagProduct(Product):
 
